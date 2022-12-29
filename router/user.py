@@ -21,8 +21,12 @@ def login():
     :return:
     """
     if request.method == 'GET':
-        # 如果是GET请求，直接渲染login.html模板
-        return render_template('user/login.html')
+        if 'user_id' in session:
+            # 如果已经登录，跳转到首页
+            return redirect("/")
+        else:
+            # 如果是GET请求，直接渲染login.html模板
+            return render_template('user/login.html')
     else:
         form = LoginForm(request.form)
         if form.validate():
