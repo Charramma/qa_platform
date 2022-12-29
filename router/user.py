@@ -1,6 +1,6 @@
 # 用户模块相关蓝图
 
-from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify
+from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify, session
 from models.extension import db
 from .user_form import LoginForm, RegisterForm
 from models.user import UserModel, EmailCaptchaModel
@@ -31,7 +31,9 @@ def login():
             user_model = UserModel.query.filter_by(email=email).first()
 
             # 验证用户信息是否已存在数据库中，并将表单获取的密码与数据库中的密码进行比对
-            if user_model and check_password_hash(user_model.password,password):
+            if user_model and check_password_hash(user_model.password, password):
+                # 使用session保存登录状态
+                session['user_id'] = user_model.id
                 return redirect("/")
             else:
                 flash("密码输入错误！")
@@ -39,6 +41,16 @@ def login():
         else:
             flash("邮箱或密码输入错误")
             return redirect(url_for("user_blueprint.login"))
+
+
+@user_bp.route('/logout/')
+def logout():
+    """
+    注销登录：清空session中所有数据
+    :return:
+    """
+    session.pop('user_id', None)
+    return redirect(url_for('user_blueprint.login'))
 
 
 @user_bp.route('/register/', methods=['GET', 'POST'])
