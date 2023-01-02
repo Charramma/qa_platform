@@ -80,6 +80,7 @@ def register():
 
             return redirect(url_for("user_blueprint.login"))
         else:
+            flash("输入有误，注册失败")
             return redirect(url_for("user_blueprint.register"))
 
 

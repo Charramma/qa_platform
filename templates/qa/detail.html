@@ -1,0 +1,59 @@
+{% extends 'qa/qa_base.html' %}
+
+{% block title %}
+问答详情
+{% endblock %}
+
+{% block head%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<div class="row mt-5">
+  <div class="col"></div>
+  <div class="col-8" style="background-color: #fff">
+    <h3 class="text-center">{{ question.title }}</h3>
+    <p class="question-info">
+      <span>Author: {{ question.user.username }}</span><br>
+      <span>Time: {{ question.create_time }}</span>
+    </p>
+    <hr>
+    <p class="question-content">{{ question.content }}</p>
+
+    <hr>
+
+    <h4 class="comment-group-title">回答（{{ question.answers|length }}）：</h4>
+    <form action="{{ url_for('qa_blueprint.answer', question_id=question.id) }}" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" name="content" placeholder="请填写内容">
+      </div>
+      {% for message in get_flashed_messages() %}
+      <div class="form-group">
+        <div class="text-danger">
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+      <div class="form-group" style="text-align: right">
+        <button class="btn btn-primary">回答</button>
+      </div>
+    </form>
+    <ul class="comment-group">
+      {% for answer in question.answers %}
+      <li class="user-info">
+        <div class="user-info">
+          <img src="{{ url_for('static', filename='images/avatar.jpg') }}" alt="" class="side-question-avatar">
+          <span class="username">{{ answer.user.username }}</span>
+          <span class="create-time">{{ answer.create_time }}</span>
+        </div>
+        <p class="comment-content">{{ answer.content }}</p>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+  </div>
+  <div class="col"></div>
+</div>
+{% endblock %}

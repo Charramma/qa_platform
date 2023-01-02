@@ -1,0 +1,33 @@
+{% extends "qa/qa_base.html" %}
+
+{% block title %}
+发布问答
+{% endblock %}
+
+{% block body %}
+<div class="row mt-3">
+    <div class="col"></div>
+    <div class="col-6 text-center">
+        <h1>想问点什么？</h1>
+        <form action="{{ url_for('qa_blueprint.public_question') }}" method="POST">
+            <div class="form-group">
+                <input type="text" class="form-control" name="title" placeholder="输入问题">
+            </div>
+            <div class="form-group">
+                <textarea name="content" class="form-control" rows="10" placeholder="输入问答详情"></textarea>
+            </div>
+            {% for message in get_flashed_messages() %}
+            <div class="form-group">
+                <div class="text-danger">
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="from-group text-center">
+                <button type="submit" class="btn btn-primary btn-block">提交</button>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}
